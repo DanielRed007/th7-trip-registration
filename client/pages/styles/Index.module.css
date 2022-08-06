@@ -1,0 +1,88 @@
+
+.welcome {
+    font-size: 240px;
+    font-weight: 300;
+    animation-name: animation-welcome;
+    animation-duration: 1s;
+    position: relative;
+    font-family: 'Poiret One', cursive;
+    padding-top: 120px;
+}
+
+@keyframes animation-welcome{
+    from {
+        left: -100%
+    }
+
+    to{
+        left: 0;
+    }
+}
+
+.customer {
+    font-size: 90px;
+    animation-name: animation-customer;
+    animation-duration: 1s;
+    position: relative;
+    margin-right: 40px;
+    font-style: italic;
+}
+
+@keyframes animation-customer{
+    from {
+        bottom: -300px
+    }
+
+    to{
+        bottom: 0;
+    }
+}
+
+.preflight {
+    font-size: 90px;
+    animation-name: animation-preflight;
+    animation-duration: 1s;
+    position: relative;
+}
+
+@keyframes animation-preflight{
+    from {
+        right: -100%
+    }
+
+    to{
+        right: 0;
+    }
+}
+
+.registration {
+    font-size: 120px;
+    animation-name: animation-registration;
+    animation-duration: 1s;
+    position: relative;
+    font-weight: 400;
+    margin-top: -40px;
+    font-family: 'Poiret One', cursive;
+}
+
+@keyframes animation-registration{
+    from {
+        bottom: -100%
+    }
+
+    to{
+        bottom: 0;
+    }
+}
+
+.titleContainer{
+    display: flex;
+    justify-content: left;
+    margin-top: -100px;
+}
+
+.registrationContainer{
+    width: 100%;
+    display: flex;
+    justify-content: left;
+}
