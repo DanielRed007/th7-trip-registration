@@ -64,7 +64,7 @@ function Index() {
                 Registration
               </Typography>
               <Stack sx={{marginTop: "20px",marginLeft: "40px",width: "100px", height: "40px"}} direction="row" spacing={2}>
-                <Button variant="contained" onClick={goToRegister}>Sign In</Button>
+                <Button variant="outlined" onClick={goToRegister}>Sign In</Button>
               </Stack>
             </div>
           </Box>
