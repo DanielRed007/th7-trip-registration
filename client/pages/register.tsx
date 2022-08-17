@@ -1,4 +1,5 @@
 import React, { useState, SyntheticEvent } from 'react';
+import { FormProvider, useForm } from "react-hook-form";
 import type { NextPage } from 'next';
 import Head from 'next/head';
 import Image from 'next/image';
@@ -11,7 +12,7 @@ import Accordion from '@mui/material/Accordion';
 import AccordionDetails from '@mui/material/AccordionDetails';
 import AccordionSummary from '@mui/material/AccordionSummary';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-import TextInput from "./components/shared/TextInput";
+import { TextInput } from "./components/shared/TextInput";
 
 // Basic info
 // Name - string
@@ -37,8 +38,36 @@ import TextInput from "./components/shared/TextInput";
 // Enviar
 // Submit
 
+type FormValues = {
+  firstName: string;
+  lastName: string;
+};
+
+interface IFormInput {
+  textValue: string;
+  radioValue: string;
+  checkboxValue: string[];
+  dateValue: Date;
+  dropdownValue: string;
+  sliderValue: number;
+}
+
+const defaultValues = {
+  firstName: "",
+  lastName: "",
+  radioValue: "",
+  checkboxValue: [],
+  dateValue: new Date(),
+  dropdownValue: "",
+  sliderValue: 0,
+};
+
 function Register() {
   const [expanded, setExpanded] = useState<string | false>(false);
+  const methods = useForm<IFormInput>({ defaultValues: defaultValues });
+  const { handleSubmit, reset, control, setValue, watch } = methods;
+  const onSubmit = (data: any) => console.log(data);
+  
 
   const handleChange = (panel: string) => (event: SyntheticEvent, isExpanded: boolean) => {
     setExpanded(isExpanded ? panel : false);
@@ -58,7 +87,7 @@ function Register() {
             Customer Preflight Registration
           </Typography>
 
-          <div>
+          <form onSubmit={handleSubmit(onSubmit)}>
 
             <Accordion sx={{padding: "1rem"}} expanded={expanded === 'panel1'} onChange={handleChange('panel1')}>
               <AccordionSummary
@@ -74,16 +103,18 @@ function Register() {
               <AccordionDetails>
 
                 <TextInput 
-                  label={"First Name"}
-                  required={true}
+                  name="firstName" 
+                  control={control} 
+                  label="First Name"
                 />
 
                 <TextInput 
-                  label={"Last Name"}
-                  required={true}
+                  name="lastName" 
+                  control={control} 
+                  label="Last Name"
                 />
 
-                <TextInput 
+                {/* <TextInput 
                   label={"First Name"}
                   required={true}
                 />
@@ -96,7 +127,7 @@ function Register() {
                 <TextInput 
                   label={"Last Name"}
                   required={true}
-                />
+                /> */}
 
               </AccordionDetails>
             </Accordion>
@@ -157,7 +188,7 @@ function Register() {
                   </Typography>
               </AccordionDetails>
             </Accordion>
-          </div>
+          </form>
         </Box>
       </Container>
     </Box>
