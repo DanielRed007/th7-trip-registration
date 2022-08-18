@@ -6,6 +6,7 @@ import Image from 'next/image';
 import Box from '@mui/material/Box';
 import Container from '@mui/material/Container';
 import Typography from '@mui/material/Typography';
+import Grid from '@mui/material/Grid';
 import Button from '@mui/material/Button';
 import Stack from '@mui/material/Stack';
 import Accordion from '@mui/material/Accordion';
@@ -13,6 +14,8 @@ import AccordionDetails from '@mui/material/AccordionDetails';
 import AccordionSummary from '@mui/material/AccordionSummary';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import { TextInput } from "./components/shared/TextInput";
+import { InputDropdown } from "./components/shared/InputDropdown";
+import { DateInput } from "./components/shared/DateInput";
 
 // Basic info
 // Name - string
@@ -20,6 +23,7 @@ import { TextInput } from "./components/shared/TextInput";
 // Type of document - Select
 // Document number - string
 // Date of birth - date
+// Gender - radio - string
 
 // Contact Info
 // Email - string
@@ -55,12 +59,17 @@ interface IFormInput {
 const defaultValues = {
   firstName: "",
   lastName: "",
-  radioValue: "",
+  typeOfDocument: "",
+  documentNumber: "",
+  dateOfBirth: "",
+  gender: "",
   checkboxValue: [],
   dateValue: new Date(),
   dropdownValue: "",
   sliderValue: 0,
 };
+
+// https://github.com/Mohammad-Faisal/react-hook-form-material-ui/blob/master/src/FormDemo.tsx
 
 function Register() {
   const [expanded, setExpanded] = useState<string | false>(false);
@@ -72,6 +81,17 @@ function Register() {
   const handleChange = (panel: string) => (event: SyntheticEvent, isExpanded: boolean) => {
     setExpanded(isExpanded ? panel : false);
   };
+
+  const dropdownOptions = [
+    {
+      label: "Dropdown Option 1",
+      value: "1",
+    },
+    {
+      label: "Dropdown Option 2",
+      value: "2",
+    },
+  ];
 
   return (
     <Box
@@ -101,33 +121,62 @@ function Register() {
 
               </AccordionSummary>
               <AccordionDetails>
-
-                <TextInput 
-                  name="firstName" 
-                  control={control} 
-                  label="First Name"
-                />
-
-                <TextInput 
-                  name="lastName" 
-                  control={control} 
-                  label="Last Name"
-                />
-
-                {/* <TextInput 
-                  label={"First Name"}
-                  required={true}
-                />
-
-                <TextInput 
-                  label={"Last Name"}
-                  required={true}
-                />
                 
-                <TextInput 
-                  label={"Last Name"}
-                  required={true}
-                /> */}
+                <Grid container spacing={2}>
+                  <Grid item xs={6}>
+                    <TextInput 
+                      name="firstName" 
+                      control={control} 
+                      label="First Name"
+                      type="text"
+                    />
+                  </Grid>
+                  <Grid item xs={6}>
+                    <TextInput 
+                      name="lastName" 
+                      control={control} 
+                      label="Last Name"
+                      type="text"
+                    />
+                  </Grid>
+                </Grid>
+
+                <Grid container spacing={2}>
+                  <Grid item xs={6}>
+                    <InputDropdown 
+                      name="typeOfDocument" 
+                      control={control} 
+                      label="Type of Document"
+                      options={dropdownOptions}
+                    />
+                  </Grid>
+                  <Grid item xs={6}>
+                    <TextInput 
+                      name="documentNumber" 
+                      control={control} 
+                      label="Document Number"
+                      type="number"
+                    />
+                  </Grid>
+                </Grid>
+
+                <Grid container spacing={2}>
+                  <Grid item xs={6}>
+                    <DateInput 
+                      name="dateOfBirth" 
+                      control={control} 
+                      label="Date of Birth"
+                    />
+                  </Grid>
+                  <Grid item xs={6}>
+                    <TextInput 
+                      name="documentNumber" 
+                      control={control} 
+                      label="Document Number"
+                      type="number"
+                    />
+                  </Grid>
+                </Grid>
 
               </AccordionDetails>
             </Accordion>
@@ -188,6 +237,22 @@ function Register() {
                   </Typography>
               </AccordionDetails>
             </Accordion>
+
+            <Accordion sx={{padding: "1rem"}} expanded={true} onChange={handleChange('panel4')}>
+              <AccordionDetails>
+                <Grid
+                  container
+                  spacing={0}
+                  direction="column"
+                  alignItems="center"
+                  justifyContent="center"
+                  sx={{marginTop: "1.4rem"}}
+                >
+                  <Button variant="contained" type="submit" >Submit</Button>
+                </Grid>   
+              </AccordionDetails>
+            </Accordion>
+   
           </form>
         </Box>
       </Container>

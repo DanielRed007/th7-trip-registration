@@ -10,9 +10,10 @@ export interface FormInputProps {
     control: any;
     label: string;
     setValue?: any;
+    type: string;
 }
 
-export const TextInput = ({ name, control, label }: FormInputProps) => {
+export const TextInput = ({ name, control, label, type }: FormInputProps) => {
   return (
     <Controller
         name={name}
@@ -32,6 +33,7 @@ export const TextInput = ({ name, control, label }: FormInputProps) => {
             fullWidth
             label={label}
             variant="outlined"
+            type={type}
         />
         )}
     />
