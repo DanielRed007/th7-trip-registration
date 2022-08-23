@@ -11,9 +11,10 @@ export interface FormInputProps {
     label: string;
     setValue?: any;
     type: string;
+    required?: boolean;
 }
 
-export const TextInput = ({ name, control, label, type }: FormInputProps) => {
+export const TextInput = ({ name, control, label, type, required }: FormInputProps) => {
   return (
     <Controller
         name={name}
@@ -34,6 +35,8 @@ export const TextInput = ({ name, control, label, type }: FormInputProps) => {
             label={label}
             variant="outlined"
             type={type}
+            required={required || false}
+            // color={"error"}
         />
         )}
     />

@@ -16,6 +16,7 @@ import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import { TextInput } from "./components/shared/TextInput";
 import { InputDropdown } from "./components/shared/InputDropdown";
 import { DateInput } from "./components/shared/DateInput";
+import { RadioInput } from "./components/shared/RadioInput";
 
 // Basic info
 // Name - string
@@ -48,48 +49,79 @@ type FormValues = {
 };
 
 interface IFormInput {
-  textValue: string;
-  radioValue: string;
-  checkboxValue: string[];
-  dateValue: Date;
-  dropdownValue: string;
-  sliderValue: number;
+  // textValue: string;
+  // radioValue: string;
+  // checkboxValue: string[];
+  // dateValue: Date;
+  // dropdownValue: string;
+  // sliderValue: number;
+  firstName: string;
+  lastName: string;
+  typeOfDocument: string;
+  documentNumber: number;
+  dateOfBirth: string;
+  gender: string
 }
 
 const defaultValues = {
   firstName: "",
   lastName: "",
   typeOfDocument: "",
-  documentNumber: "",
+  documentNumber: 0,
   dateOfBirth: "",
   gender: "",
-  checkboxValue: [],
-  dateValue: new Date(),
-  dropdownValue: "",
-  sliderValue: 0,
+  // checkboxValue: [],
+  // dateValue: new Date(),
+  // dropdownValue: "",
+  // sliderValue: 0,
 };
 
 // https://github.com/Mohammad-Faisal/react-hook-form-material-ui/blob/master/src/FormDemo.tsx
 
 function Register() {
-  const [expanded, setExpanded] = useState<string | false>(false);
+  const [expanded, setExpanded] = useState(false);
   const methods = useForm<IFormInput>({ defaultValues: defaultValues });
-  const { handleSubmit, reset, control, setValue, watch } = methods;
-  const onSubmit = (data: any) => console.log(data);
-  
+  const { handleSubmit, reset, control, setValue, watch, formState } = methods;
+  const onSubmit = (data: any) => {
+    console.log(data);
+    console.log(formState, "My Control");
+  };
 
   const handleChange = (panel: string) => (event: SyntheticEvent, isExpanded: boolean) => {
-    setExpanded(isExpanded ? panel : false);
+    // setExpanded(isExpanded ? panel : false);
+  };
+
+  const step1Valid = ():boolean => {
+    console.log(formState);
+
+    return formState.isValid;
+  }
+
+  const validateStep = () => {
+    
+
+    return !expanded;
   };
 
   const dropdownOptions = [
     {
-      label: "Dropdown Option 1",
-      value: "1",
+      label: "Passport",
+      value: "passport",
     },
     {
-      label: "Dropdown Option 2",
-      value: "2",
+      label: "Document Id",
+      value: "documentId",
+    },
+  ];
+
+  const genderOptions = [
+    {
+      label: "Male",
+      value: "male",
+    },
+    {
+      label: "Female",
+      value: "female",
     },
   ];
 
@@ -109,7 +141,7 @@ function Register() {
 
           <form onSubmit={handleSubmit(onSubmit)}>
 
-            <Accordion sx={{padding: "1rem"}} expanded={expanded === 'panel1'} onChange={handleChange('panel1')}>
+            <Accordion sx={{padding: "1rem"}} expanded={true} onChange={handleChange('panel1')}>
               <AccordionSummary
                   expandIcon={<ExpandMoreIcon />}
                   aria-controls="panel1bh-content"
@@ -129,6 +161,7 @@ function Register() {
                       control={control} 
                       label="First Name"
                       type="text"
+                      required={true}
                     />
                   </Grid>
                   <Grid item xs={6}>
@@ -137,6 +170,7 @@ function Register() {
                       control={control} 
                       label="Last Name"
                       type="text"
+                      required={true}
                     />
                   </Grid>
                 </Grid>
@@ -148,6 +182,7 @@ function Register() {
                       control={control} 
                       label="Type of Document"
                       options={dropdownOptions}
+                      required={true}
                     />
                   </Grid>
                   <Grid item xs={6}>
@@ -156,6 +191,7 @@ function Register() {
                       control={control} 
                       label="Document Number"
                       type="number"
+                      required={true}
                     />
                   </Grid>
                 </Grid>
@@ -166,14 +202,17 @@ function Register() {
                       name="dateOfBirth" 
                       control={control} 
                       label="Date of Birth"
+                      required={true}
                     />
                   </Grid>
                   <Grid item xs={6}>
-                    <TextInput 
-                      name="documentNumber" 
+                    <RadioInput 
+                      name="gender" 
                       control={control} 
-                      label="Document Number"
-                      type="number"
+                      label="Gender"
+                      options={genderOptions}
+                      row={true}
+                      required={false}
                     />
                   </Grid>
                 </Grid>
@@ -181,7 +220,7 @@ function Register() {
               </AccordionDetails>
             </Accordion>
 
-            <Accordion sx={{padding: "1rem"}} expanded={expanded === 'panel2'} onChange={handleChange('panel2')}>
+            <Accordion sx={{padding: "1rem"}} expanded={true} onChange={handleChange('panel2')}>
               <AccordionSummary
                   expandIcon={<ExpandMoreIcon />}
                   aria-controls="panel2bh-content"
@@ -201,7 +240,7 @@ function Register() {
               </AccordionDetails>
             </Accordion>
 
-            <Accordion sx={{padding: "1rem"}} expanded={expanded === 'panel3'} onChange={handleChange('panel3')}>
+            <Accordion sx={{padding: "1rem"}} expanded={false} onChange={handleChange('panel3')}>
               <AccordionSummary
                   expandIcon={<ExpandMoreIcon />}
                   aria-controls="panel3bh-content"
@@ -222,7 +261,7 @@ function Register() {
               </AccordionDetails>
             </Accordion>
             
-            <Accordion sx={{padding: "1rem"}} expanded={expanded === 'panel4'} onChange={handleChange('panel4')}>
+            <Accordion sx={{padding: "1rem"}} expanded={false} onChange={handleChange('panel4')}>
               <AccordionSummary
                   expandIcon={<ExpandMoreIcon />}
                   aria-controls="panel4bh-content"

@@ -16,14 +16,16 @@ export interface FormInputProps {
     label: string;
     setValue?: any;
     type?: string;
-    options?: any
+    options?: any;
+    required?: boolean
 }
 
 export const InputDropdown: React.FC<FormInputProps> = ({
   name,
   control,
   label,
-  options
+  options,
+  required
 }) => {
   const generateSingleOptions = (dropdownOptions: any[]) => {
     return dropdownOptions.map((option: any) => {
@@ -40,7 +42,7 @@ export const InputDropdown: React.FC<FormInputProps> = ({
       <InputLabel>{label}</InputLabel>
       <Controller
         render={({ field: { onChange, value } }) => (
-          <Select className={styles.defaultDropdownStyles} onChange={onChange} value={value}>
+          <Select required={required} className={styles.defaultDropdownStyles} onChange={onChange} value={value}>
             {generateSingleOptions(options)}
           </Select>
         )}

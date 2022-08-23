@@ -1,10 +1,11 @@
 
 
-import React from "react";
-import DateFnsUtils from "@date-io/date-fns";
-import DatePicker from '@mui/lab/DatePicker';
-import { Controller, useFormContext } from "react-hook-form";
-import LocalizationProvider from '@mui/lab/LocalizationProvider';
+import React, { useState } from "react";
+import TextField from '@mui/material/TextField';
+import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
+import { DatePicker } from '@mui/x-date-pickers/DatePicker';
+import { Controller } from "react-hook-form";
 const DATE_FORMAT = "dd-MMM-yy";
 
 export interface FormInputProps {
@@ -13,31 +14,27 @@ export interface FormInputProps {
     label: string;
     setValue?: any;
     type?: string;
-    options?: any
+    options?: any;
+    required?: boolean;
 }
 
 
-export const DateInput = ({ name, control, label }: FormInputProps) => {
+export const DateInput = ({ name, control, label, required }: FormInputProps) => {
+  const [value, setValue] = useState<Date | null>(null);
+
   return (
-    <LocalizationProvider utils={DateFnsUtils}>
+    <LocalizationProvider dateAdapter={AdapterDateFns}>
       <Controller
         name={name}
         control={control}
         render={({ field, fieldState, formState }) => (
           <DatePicker
-            fullWidth
-            variant="inline"
-            defaultValue={new Date()}
-            id={`date-${Math.random()}`}
             label={label}
-            rifmFormatter={(val:any) => val.replace(/[^[a-zA-Z0-9-]*$]+/gi, "")}
-            refuse={/[^[a-zA-Z0-9-]*$]+/gi}
-            autoOk
-            KeyboardButtonProps={{
-              "aria-label": "change date",
+            value={value}
+            onChange={(newValue) => {
+              setValue(newValue);
             }}
-            format={DATE_FORMAT}
-            {...field}
+            renderInput={(params) => <TextField required={required} {...params} />}
           />
         )}
       />
