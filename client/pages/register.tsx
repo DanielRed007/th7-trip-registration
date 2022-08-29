@@ -1,14 +1,10 @@
-import React, { useState, SyntheticEvent } from 'react';
-import { FormProvider, useForm } from "react-hook-form";
-import type { NextPage } from 'next';
-import Head from 'next/head';
-import Image from 'next/image';
+import React, { useState } from 'react';
+import { useForm } from "react-hook-form";
 import Box from '@mui/material/Box';
 import Container from '@mui/material/Container';
 import Typography from '@mui/material/Typography';
 import Grid from '@mui/material/Grid';
 import Button from '@mui/material/Button';
-import Stack from '@mui/material/Stack';
 import Accordion from '@mui/material/Accordion';
 import AccordionDetails from '@mui/material/AccordionDetails';
 import AccordionSummary from '@mui/material/AccordionSummary';
@@ -17,50 +13,20 @@ import { TextInput } from "./components/shared/TextInput";
 import { InputDropdown } from "./components/shared/InputDropdown";
 import { DateInput } from "./components/shared/DateInput";
 import { RadioInput } from "./components/shared/RadioInput";
-
-// Basic info
-// Name - string
-// Last mane - string
-// Type of document - Select
-// Document number - string
-// Date of birth - date
-// Gender - radio - string
-
-// Contact Info
-// Email - string
-// Address - string
-// Country of Residence - Select
-// Mobile Number
-
-// Travel Info
-// Country of departure - Select
-// Country of destination - Select
-// Travel duration - Data picker
-
-// Additional
-// Additional comments
-
-// Enviar
-// Submit
-
-type FormValues = {
-  firstName: string;
-  lastName: string;
-};
+import { CustomModal } from "./components/shared/CustomModal";
 
 interface IFormInput {
-  // textValue: string;
-  // radioValue: string;
-  // checkboxValue: string[];
-  // dateValue: Date;
-  // dropdownValue: string;
-  // sliderValue: number;
   firstName: string;
   lastName: string;
   typeOfDocument: string;
   documentNumber: number;
   dateOfBirth: string;
-  gender: string
+  gender: string;
+  email: string;
+  address: string;
+  countryOfResidence: string;
+  mobile: string;
+  comments: string
 }
 
 const defaultValues = {
@@ -70,38 +36,32 @@ const defaultValues = {
   documentNumber: 0,
   dateOfBirth: "",
   gender: "",
-  // checkboxValue: [],
-  // dateValue: new Date(),
-  // dropdownValue: "",
-  // sliderValue: 0,
+  email: "",
+  address: "",
+  countryOfResidence: "",
+  mobile: "",
+  comments: ""
 };
 
-// https://github.com/Mohammad-Faisal/react-hook-form-material-ui/blob/master/src/FormDemo.tsx
-
 function Register() {
-  const [expanded, setExpanded] = useState(false);
+  const [formStep, setFormStep] = useState(0);
+  const [openModal, setOpenModal] = useState(false);
   const methods = useForm<IFormInput>({ defaultValues: defaultValues });
   const { handleSubmit, reset, control, setValue, watch, formState } = methods;
+
   const onSubmit = (data: any) => {
     console.log(data);
-    console.log(formState, "My Control");
+    // Validate Modal
+    verifyFormSubmission();
   };
 
-  const handleChange = (panel: string) => (event: SyntheticEvent, isExpanded: boolean) => {
-    // setExpanded(isExpanded ? panel : false);
-  };
+  const nextFormStep = () => setFormStep((currentStep) => currentStep + 1);
 
-  const step1Valid = ():boolean => {
-    console.log(formState);
-
-    return formState.isValid;
+  const previousFormStep = () => setFormStep((currentStep) => currentStep - 1);
+  
+  const verifyFormSubmission = () => {
+    setOpenModal(true)
   }
-
-  const validateStep = () => {
-    
-
-    return !expanded;
-  };
 
   const dropdownOptions = [
     {
@@ -141,7 +101,7 @@ function Register() {
 
           <form onSubmit={handleSubmit(onSubmit)}>
 
-            <Accordion sx={{padding: "1rem"}} expanded={true} onChange={handleChange('panel1')}>
+            <Accordion sx={{padding: "1rem"}} expanded={formStep === 0}>
               <AccordionSummary
                   expandIcon={<ExpandMoreIcon />}
                   aria-controls="panel1bh-content"
@@ -215,32 +175,77 @@ function Register() {
                       required={false}
                     />
                   </Grid>
+                  <Grid item xs={6}>
+                    <Button variant="outlined" onClick={() => nextFormStep()} >Next</Button>
+                  </Grid>
                 </Grid>
 
               </AccordionDetails>
             </Accordion>
 
-            <Accordion sx={{padding: "1rem"}} expanded={true} onChange={handleChange('panel2')}>
+            <Accordion sx={{padding: "1rem"}} expanded={formStep === 1}>
               <AccordionSummary
                   expandIcon={<ExpandMoreIcon />}
                   aria-controls="panel2bh-content"
                   id="panel2bh-header"
               >
                   <Typography sx={{ width: '33%', flexShrink: 0 }}>Contact Information</Typography>
-                  {/* <Typography sx={{ color: 'text.secondary' }}>
-                  You are currently not an owner
-                  </Typography> */}
               </AccordionSummary>
               <AccordionDetails>
-                  <Typography>
-                  Donec placerat, lectus sed mattis semper, neque lectus feugiat lectus,
-                  varius pulvinar diam eros in elit. Pellentesque convallis laoreet
-                  laoreet.
-                  </Typography>
-              </AccordionDetails>
+
+                <Grid container spacing={2}>
+
+                  <Grid item xs={6}>
+                    <TextInput 
+                      name="email" 
+                      control={control} 
+                      label="Email"
+                      type="text"
+                      required={true}
+                    />
+                  </Grid>
+                  <Grid item xs={6}>
+                    <TextInput 
+                      name="address" 
+                      control={control} 
+                      label="Address"
+                      type="text"
+                      required={true}
+                    />
+                  </Grid>
+
+                  <Grid item xs={6}>
+                    <TextInput 
+                      name="countryOfResidence" 
+                      control={control} 
+                      label="Country of Residence"
+                      type="text"
+                      required={true}
+                    />
+                  </Grid>
+                  <Grid item xs={6}>
+                    <TextInput 
+                      name="mobile" 
+                      control={control} 
+                      label="Mobile #"
+                      type="number"
+                      required={true}
+                    />
+                  </Grid>
+                  
+                  <Grid item xs={6}>
+                    <Button variant="outlined" sx={{marginRight: "1rem"}} onClick={() => previousFormStep()} >Back</Button>
+                    <Button variant="outlined" onClick={() => nextFormStep()} >Next</Button>
+                  </Grid>
+                  <Grid item xs={6}>
+                    
+                  </Grid>
+                </Grid>
+                </AccordionDetails>
+
             </Accordion>
 
-            <Accordion sx={{padding: "1rem"}} expanded={false} onChange={handleChange('panel3')}>
+            <Accordion sx={{padding: "1rem"}} expanded={formStep === 2}>
               <AccordionSummary
                   expandIcon={<ExpandMoreIcon />}
                   aria-controls="panel3bh-content"
@@ -249,35 +254,27 @@ function Register() {
                   <Typography sx={{ width: '33%', flexShrink: 0 }}>
                     Travel Information
                   </Typography>
-                  {/* <Typography sx={{ color: 'text.secondary' }}>
-                  Filtering has been entirely disabled for whole web server
-                  </Typography> */}
               </AccordionSummary>
               <AccordionDetails>
-                  <Typography>
-                  Nunc vitae orci ultricies, auctor nunc in, volutpat nisl. Integer sit
-                  amet egestas eros, vitae egestas augue. Duis vel est augue.
-                  </Typography>
-              </AccordionDetails>
-            </Accordion>
-            
-            <Accordion sx={{padding: "1rem"}} expanded={false} onChange={handleChange('panel4')}>
-              <AccordionSummary
-                  expandIcon={<ExpandMoreIcon />}
-                  aria-controls="panel4bh-content"
-                  id="panel4bh-header"
-              >
-                  <Typography sx={{ width: '33%', flexShrink: 0 }}>Additional Information</Typography>
-              </AccordionSummary>
-              <AccordionDetails>
-                  <Typography>
-                  Nunc vitae orci ultricies, auctor nunc in, volutpat nisl. Integer sit
-                  amet egestas eros, vitae egestas augue. Duis vel est augue.
-                  </Typography>
+                  
+                  <Grid item xs={12}>
+                    <TextInput 
+                      name="comments" 
+                      control={control} 
+                      label="Comments"
+                      type="text"
+                    />
+                  </Grid>
+                  
+                  <Grid item xs={6}>
+                    <Button variant="outlined" sx={{marginRight: "1rem"}} onClick={() => previousFormStep()} >Back</Button>
+                    <Button variant="outlined" onClick={() => nextFormStep()} >Next</Button>
+                  </Grid>
+
               </AccordionDetails>
             </Accordion>
 
-            <Accordion sx={{padding: "1rem"}} expanded={true} onChange={handleChange('panel4')}>
+            <Accordion sx={{padding: "1rem"}} expanded={true}>
               <AccordionDetails>
                 <Grid
                   container
@@ -286,8 +283,11 @@ function Register() {
                   alignItems="center"
                   justifyContent="center"
                   sx={{marginTop: "1.4rem"}}
-                >
-                  <Button variant="contained" type="submit" >Submit</Button>
+                > 
+                  <Grid item xs={6}>
+                    <Button variant="outlined" sx={{marginRight: "1rem"}} onClick={() => previousFormStep()} >Review</Button>
+                    <Button variant="contained" type="submit" >Submit</Button>
+                  </Grid>
                 </Grid>   
               </AccordionDetails>
             </Accordion>
@@ -295,6 +295,12 @@ function Register() {
           </form>
         </Box>
       </Container>
+
+      <CustomModal
+        open={openModal}
+        handleOpenModal={() => setOpenModal(true)}
+        handleCloseModal={() => setOpenModal(false)}
+      />      
     </Box>
   )
 }
