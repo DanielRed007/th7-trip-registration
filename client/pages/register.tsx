@@ -46,21 +46,21 @@ const defaultValues = {
 function Register() {
   const [formStep, setFormStep] = useState(0);
   const [openModal, setOpenModal] = useState(false);
+  const [pdfData, setPdfData] = useState(null);
   const methods = useForm<IFormInput>({ defaultValues: defaultValues });
   const { handleSubmit, reset, control, setValue, watch, formState } = methods;
 
   const onSubmit = (data: any) => {
-    console.log(data);
-    // Validate Modal
-    verifyFormSubmission();
+    verifyFormSubmission(data);
   };
 
   const nextFormStep = () => setFormStep((currentStep) => currentStep + 1);
 
   const previousFormStep = () => setFormStep((currentStep) => currentStep - 1);
   
-  const verifyFormSubmission = () => {
-    setOpenModal(true)
+  const verifyFormSubmission = (data) => {
+    setPdfData(data);
+    setOpenModal(true);
   }
 
   const dropdownOptions = [
@@ -285,8 +285,7 @@ function Register() {
                   sx={{marginTop: "1.4rem"}}
                 > 
                   <Grid item xs={6}>
-                    <Button variant="outlined" sx={{marginRight: "1rem"}} onClick={() => previousFormStep()} >Review</Button>
-                    <Button variant="contained" type="submit" >Submit</Button>
+                    <Button variant="contained" type="submit" >Preview</Button>
                   </Grid>
                 </Grid>   
               </AccordionDetails>
@@ -298,8 +297,9 @@ function Register() {
 
       <CustomModal
         open={openModal}
-        handleOpenModal={() => setOpenModal(true)}
+        handleOpenModal={() => console.log("Goes!!")}
         handleCloseModal={() => setOpenModal(false)}
+        pdfData={pdfData}
       />      
     </Box>
   )
